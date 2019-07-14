@@ -14,32 +14,42 @@ namespace Liss
     {
         private readonly ContentManager content;
         private readonly GraphicsDevice graphicsDevice;
+        private GraphicsDeviceManager graphics;
         private string[,] map;
         private Tile[,] tiles;
+        private Player player;
 
-        public Screen(ContentManager content, GraphicsDevice gd)
+        public Screen(ContentManager content, GraphicsDeviceManager graphics, GraphicsDevice gd)
         {
             this.content = content;
+            this.graphics = graphics;
             graphicsDevice = gd;
             map = new string[20, 20];
             tiles = new Tile[20, 20];
             LoadMap();
             CreateTiles();
-        }
+            player = new Player(content, graphicsDevice); 
+    }
 
         public Tile[,] GetTiles()
         {
             return tiles;
         }
 
-        public void update()
+        public Player GetPlayer()
         {
+            return player;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            // update logic for screen tiles
+            player.Update(gameTime, graphics);
 
         }
 
         private void LoadMap()
         {
-
             string text = File.ReadAllText("Content/testmap.csv").Replace(System.Environment.NewLine, ",");
             string[] vals = text.Split(',');
             int count = 0;

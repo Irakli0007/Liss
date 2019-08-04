@@ -10,7 +10,11 @@ namespace Liss
     public class Liss : Game
     {
         private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
+        //private SpriteBatch worldLayer;
+        //private SpriteBatch baseLayer;
+        //private SpriteBatch bottomLayer;
+        private SpriteBatch final;
+        private List<SpriteBatch> layers;
         private RenderTarget2D target;
         private Screen screen;
 
@@ -30,7 +34,15 @@ namespace Liss
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            //worldLayer = new SpriteBatch(GraphicsDevice);
+            //baseLayer = new SpriteBatch(GraphicsDevice);
+            //bottomLayer = new SpriteBatch(GraphicsDevice);
+            //layers = new List<SpriteBatch>();
+            //layers.Add(bottomLayer);
+            //layers.Add(baseLayer);
+            //layers.Add(worldLayer);
+            final = new SpriteBatch(GraphicsDevice);
+
             target = new RenderTarget2D(GraphicsDevice, 1024, 576); // set scale here
             // other resolutions 640x360, 768x432, 1024x576, 1280x720
             // best ones for 16x16 pixel art seems like 768x432 or 1024x576
@@ -54,25 +66,31 @@ namespace Liss
 
         protected override void Draw(GameTime gameTime)
         {
-            Tile[,] tiles = screen.GetTiles();
+            List<Tile[,]> tiles = screen.GetTiles();
 
             // draw to render target
             GraphicsDevice.SetRenderTarget(target);
-            spriteBatch.Begin();
+
+            final.Begin();
             GraphicsDevice.Clear(Color.White);
-            foreach (Tile t in tiles)
+            foreach (Tile[,] tileMap in tiles)
             {
-                spriteBatch.Draw(t.GetTexture(), t.GetLocation(), Color.White);
+                foreach (Tile t in tileMap)
+                {
+                    if (t.GetTexture() != null)
+                    {
+                        final.Draw(t.GetTexture(), t.GetLocation(), Color.White);
+                    } 
+                }
             }
-            spriteBatch.Draw(screen.GetPlayer().GetTexture(), screen.GetPlayer().GetLocation(), Color.White);
-            spriteBatch.End();
+            final.Draw(screen.GetPlayer().GetTexture(), screen.GetPlayer().GetLocation(), Color.White);
+            final.End();
 
             //// draw to screen
             GraphicsDevice.SetRenderTarget(null);
-            spriteBatch.Begin();
-            spriteBatch.Draw(target, new Rectangle(0, 0, GraphicsDevice.DisplayMode.Width, GraphicsDevice.DisplayMode.Height), Color.White);
-            spriteBatch.End();
-
+            final.Begin();
+            final.Draw(target, new Rectangle(0, 0, GraphicsDevice.DisplayMode.Width, GraphicsDevice.DisplayMode.Height), Color.White);
+            final.End();
 
             base.Draw(gameTime);
         }

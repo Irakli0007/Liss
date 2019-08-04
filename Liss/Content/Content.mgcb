@@ -40,6 +40,15 @@
 #begin testmap.csv
 /copy:testmap.csv
 
+#begin TestTileMap_BaseLayer.csv
+/copy:TestTileMap_BaseLayer.csv
+
+#begin TestTileMap_BottomLayer.csv
+/copy:TestTileMap_BottomLayer.csv
+
+#begin TestTileMap_World.csv
+/copy:TestTileMap_World.csv
+
 #begin trainer2sprites.png
 /importer:TextureImporter
 /processor:TextureProcessor

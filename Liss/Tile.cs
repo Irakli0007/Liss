@@ -14,10 +14,10 @@ namespace Liss
         private readonly ContentManager content;
         private readonly GraphicsDevice graphicsDevice;
 
+        public static int tileSize = 16;
         private TileTypes type;
         private Texture2D texture;
         private readonly int tileNum;
-        private static int tileSize = 16;
         private Point p;
 
         public Tile(int num, Point p, ContentManager content, GraphicsDevice gd)
@@ -48,15 +48,19 @@ namespace Liss
 
         private void SetData()
         {
+
             int x = tileNum % 6;
             int y = tileNum / 6;
-            Rectangle rect = new Rectangle(tileSize * x, tileSize * y, tileSize, tileSize);
-            Color[] data = new Color[rect.Width * rect.Height];
-            content.Load<Texture2D>("OutdoorsTileset").GetData(0, rect, data, 0, data.Length);
-            Texture2D newTexture = new Texture2D(graphicsDevice, tileSize, tileSize);
-            newTexture.SetData(data);
-            texture = newTexture;
-            type = (TileTypes)tileNum;
+            if (tileNum > -1)
+            {
+                Rectangle rect = new Rectangle(tileSize * x, tileSize * y, tileSize, tileSize);
+                Color[] data = new Color[rect.Width * rect.Height];
+                content.Load<Texture2D>("OutdoorsTileset").GetData(0, rect, data, 0, data.Length);
+                Texture2D newTexture = new Texture2D(graphicsDevice, tileSize, tileSize);
+                newTexture.SetData(data);
+                texture = newTexture;
+                type = (TileTypes)tileNum;
+            }
         }
 
     }

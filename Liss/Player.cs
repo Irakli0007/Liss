@@ -22,8 +22,8 @@ namespace Liss
         {
             this.content = content;
             graphicsDevice = gd;
-            playerPosition.X = 50;
-            playerPosition.Y = 50;
+            playerPosition.X = 250;
+            playerPosition.Y = 250;
             playerSpeed = 100f;
             CreatePlayer();
         }

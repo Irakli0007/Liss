@@ -15,8 +15,13 @@ namespace Liss
         private readonly ContentManager content;
         private readonly GraphicsDevice graphicsDevice;
         private GraphicsDeviceManager graphics;
-        private string[,] map;
-        private Tile[,] tiles;
+        private string[,] bottomMap;
+        private string[,] baseMap;
+        private string[,] worldMap;
+        private Tile[,] bottomTiles;
+        private Tile[,] baseTiles;
+        private Tile[,] worldTiles;
+        private List<Tile[,]> layers;
         private Player player;
 
         public Screen(ContentManager content, GraphicsDeviceManager graphics, GraphicsDevice gd)
@@ -24,16 +29,34 @@ namespace Liss
             this.content = content;
             this.graphics = graphics;
             graphicsDevice = gd;
-            map = new string[20, 20];
-            tiles = new Tile[20, 20];
-            LoadMap();
+            bottomMap = new string[55, 35];
+            baseMap = new string[55, 35];
+            worldMap = new string[55, 35];
+            bottomTiles = new Tile[55, 35];
+            baseTiles = new Tile[55, 35];
+            worldTiles = new Tile[55, 35];
+            layers = new List<Tile[,]>();
+            LoadMaps();
             CreateTiles();
             player = new Player(content, graphicsDevice); 
-    }
+        }
 
-        public Tile[,] GetTiles()
+        public List<Tile[,]> GetTiles()
         {
-            return tiles;
+            return layers;
+        }
+
+        public Tile GetTile(Point p)
+        {
+            Vector2 location = new Vector2(p.X * Tile.tileSize, p.Y * Tile.tileSize);
+            foreach (Tile t in worldTiles)
+            {
+                if(t.GetLocation() == location)
+                {
+                    return t;
+                }
+            }
+            return null;
         }
 
         public Player GetPlayer()
@@ -48,16 +71,40 @@ namespace Liss
 
         }
 
-        private void LoadMap()
+        private void LoadMaps()
         {
-            string text = File.ReadAllText("Content/testmap.csv").Replace(System.Environment.NewLine, ",");
+            string text = File.ReadAllText("Content/TestTileMap_BottomLayer.csv").Replace(System.Environment.NewLine, ",");
             string[] vals = text.Split(',');
             int count = 0;
-            for(int i = 0; i < 20; i++)
+            for(int i = 0; i < 35; i++)
             {
-                for(int j = 0; j < 20; j++)
+                for(int j = 0; j < 55; j++)
                 {
-                    map[j, i] = vals[count];
+                    bottomMap[j, i] = vals[count];
+                    count++;
+                }
+            }
+
+            text = File.ReadAllText("Content/TestTileMap_BaseLayer.csv").Replace(System.Environment.NewLine, ",");
+            vals = text.Split(',');
+            count = 0;
+            for (int i = 0; i < 35; i++)
+            {
+                for (int j = 0; j < 55; j++)
+                {
+                    baseMap[j, i] = vals[count];
+                    count++;
+                }
+            }
+
+            text = File.ReadAllText("Content/TestTileMap_World.csv").Replace(System.Environment.NewLine, ",");
+            vals = text.Split(',');
+            count = 0;
+            for (int i = 0; i < 35; i++)
+            {
+                for (int j = 0; j < 55; j++)
+                {
+                    worldMap[j, i] = vals[count];
                     count++;
                 }
             }
@@ -65,16 +112,42 @@ namespace Liss
 
         private void CreateTiles()
         {
-            for(int i = 0; i < 20; i++)
+            for(int i = 0; i < 35; i++)
             {
-                for(int j = 0; j < 20; j++)
+                for(int j = 0; j < 55; j++)
                 {
-                    int num = Int32.Parse(map[j, i]);
+                    int num = Int32.Parse(bottomMap[j, i]);
                     Point p = new Point(j, i);
                     Tile t = new Tile(num, p, content, graphicsDevice);
-                    tiles[j, i] = t;
+                    bottomTiles[j, i] = t;
                 }
             }
+
+            for (int i = 0; i < 35; i++)
+            {
+                for (int j = 0; j < 55; j++)
+                {
+                    int num = Int32.Parse(baseMap[j, i]);
+                    Point p = new Point(j, i);
+                    Tile t = new Tile(num, p, content, graphicsDevice);
+                    baseTiles[j, i] = t;
+                }
+            }
+
+            for (int i = 0; i < 35; i++)
+            {
+                for (int j = 0; j < 55; j++)
+                {
+                    int num = Int32.Parse(worldMap[j, i]);
+                    Point p = new Point(j, i);
+                    Tile t = new Tile(num, p, content, graphicsDevice);
+                    worldTiles[j, i] = t;
+                }
+            }
+
+            layers.Add(bottomTiles);
+            layers.Add(baseTiles);
+            layers.Add(worldTiles);
         }
     }
 }

@@ -10,11 +10,7 @@ namespace Liss
     public class Liss : Game
     {
         private GraphicsDeviceManager graphics;
-        //private SpriteBatch worldLayer;
-        //private SpriteBatch baseLayer;
-        //private SpriteBatch bottomLayer;
         private SpriteBatch final;
-        private List<SpriteBatch> layers;
         private RenderTarget2D target;
         private Screen screen;
 
@@ -34,13 +30,6 @@ namespace Liss
 
         protected override void LoadContent()
         {
-            //worldLayer = new SpriteBatch(GraphicsDevice);
-            //baseLayer = new SpriteBatch(GraphicsDevice);
-            //bottomLayer = new SpriteBatch(GraphicsDevice);
-            //layers = new List<SpriteBatch>();
-            //layers.Add(bottomLayer);
-            //layers.Add(baseLayer);
-            //layers.Add(worldLayer);
             final = new SpriteBatch(GraphicsDevice);
 
             target = new RenderTarget2D(GraphicsDevice, 1024, 576); // set scale here

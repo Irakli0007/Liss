@@ -36,9 +36,26 @@ namespace Liss
             baseTiles = new Tile[55, 35];
             worldTiles = new Tile[55, 35];
             layers = new List<Tile[,]>();
+   //         GetRowsCols();
             LoadMaps();
             CreateTiles();
             player = new Player(content, graphicsDevice); 
+        }
+
+        private void GetRowsCols()
+        {
+            string text = File.ReadAllText("Content/TestTileMap_World.csv");
+            string[] vals = text.Split(',');
+           // text.Count(); //// ?
+            int count = 0;
+            for (int i = 0; i < 35; i++)
+            {
+                for (int j = 0; j < 55; j++)
+                {
+                    bottomMap[j, i] = vals[count];
+                    count++;
+                }
+            }
         }
 
         public List<Tile[,]> GetTiles()
@@ -66,7 +83,7 @@ namespace Liss
 
         public void Update(GameTime gameTime)
         {
-            // update logic for screen tiles
+            // add update logic for screen tiles
             player.Update(gameTime, graphics);
 
         }
@@ -112,9 +129,9 @@ namespace Liss
 
         private void CreateTiles()
         {
-            for(int i = 0; i < 35; i++)
+            for (int i = 0; i < 35; i++)
             {
-                for(int j = 0; j < 55; j++)
+                for (int j = 0; j < 55; j++)
                 {
                     int num = Int32.Parse(bottomMap[j, i]);
                     Point p = new Point(j, i);
